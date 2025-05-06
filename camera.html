@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShapenShot - 撮影</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+    }
+    .camera-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+    }
+    video, .overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .overlay {
+      pointer-events: none;
+    }
+    .controls {
+      margin-top: 20px;
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #ff3366;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="camera-wrapper">
+    <video id="video" autoplay playsinline></video>
+    <img id="frameImage" class="overlay" alt="フレーム" />
+  </div>
+  <div class="controls">
+    <button onclick="takePhoto()">📸 撮影</button>
+    <br>
+    <img id="snapshot" width="300" />
+    <canvas id="canvas" style="display: none;"></canvas>
+  </div>
+  <script>
+    const video = document.getElementById('video');
+    const frameImage = document.getElementById('frameImage');
+    const urlParams = new URLSearchParams(window.location.search);
+    const shape = urlParams.get('shape');
+
+    if (shape) {
+      frameImage.src = `frames/${shape}.png`;
+    }
+
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+          video.srcObject = stream;
+        })
+        .catch((error) => {
+          alert("カメラにアクセスできません: " + error);
+        });
+    }
+
+    function takePhoto() {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+
+      canvas.width = videoWidth;
+      canvas.height = videoHeight;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
+
+      const dataURL = canvas.toDataURL('image/png');
+      document.getElementById('snapshot').src = dataURL;
+
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = 'shapenshot.png';
+      a.click();
+    }
+
+    window.addEventListener('load', startCamera);
+  </script>
+</body>
+</html>
