@@ -37,6 +37,9 @@
       }
     }
   </style>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-512.png" type="image/png">
+  <meta name="theme-color" content="#000000">
 </head>
 <body>
   <h1>ShapenShot - PNGフレーム表示</h1>
@@ -104,6 +107,15 @@
   a.download = 'shapenshot.png';
   a.click();
 }
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('serviceWorker.js').then(reg => {
+        console.log("Service Worker registered:", reg.scope);
+      }).catch(err => {
+        console.log("Service Worker registration failed:", err);
+      });
+    });
+  }
   </script>
 </body>
 </html>
