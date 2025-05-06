@@ -1,123 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-  <title>ShapenShot - PNGフレーム</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShapenShot - フレーム選択</title>
   <style>
-    .camera-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 100vw;
-      aspect-ratio: 3 / 4;
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background-color: #111;
+      color: white;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    .frame-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 16px;
+      padding: 20px;
+      max-width: 600px;
       margin: 0 auto;
     }
-
-    video, .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .frame-item {
+      background-color: #222;
+      border-radius: 12px;
+      padding: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .frame-item:hover {
+      transform: scale(1.05);
+    }
+    .frame-item img {
       width: 100%;
-      height: 100%;
+      aspect-ratio: 3 / 4;
       object-fit: cover;
-    }
-    .overlay {
-      pointer-events: none;
-    }
-
-    .frame-buttons {
-      margin-top: 10px;
-    }
-
-    .frame-buttons button {
-      margin-right: 10px;
-    }
-    @media (max-width: 600px) {
-      .frame-buttons button {
-        font-size: 1.2rem;
-        padding: 10px;
-      }
+      border-radius: 8px;
     }
   </style>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon-512.png" type="image/png">
-  <meta name="theme-color" content="#000000">
 </head>
 <body>
-  <h1>ShapenShot - PNGフレーム表示</h1>
-
-  <div class="camera-wrapper">
-    <video id="video" autoplay playsinline></video>
-    <img id="frameImage" class="overlay" src="frames/frame_circle.png" alt="フレーム" />
+  <h1>フレームを選んで撮影へ</h1>
+  <div class="frame-grid">
+    <div class="frame-item" onclick="selectFrame('frame_circle')">
+      <img src="frames/frame_circle.png" alt="円フレーム">
+    </div>
+    <div class="frame-item" onclick="selectFrame('frame_star')">
+      <img src="frames/frame_star.png" alt="星フレーム">
+    </div>
+    <div class="frame-item" onclick="selectFrame('frame_triangle')">
+      <img src="frames/frame_triangle.png" alt="三角フレーム">
+    </div>
   </div>
-
-  <div class="frame-buttons">
-    <button onclick="setShape('frame_circle')">円</button>
-    <button onclick="setShape('frame_star')">星</button>
-    <button onclick="setShape('frame_triangle')">三角</button>
-    <!-- 撮影ボタン -->
-    <button onclick="takePhoto()">📸 撮影</button>
-    <!-- 撮影画像のプレビュー -->
-    <img id="snapshot" width="300" />
-    <!-- 見えないcanvas -->
-    <canvas id="canvas" width="300" height="300" style="display:none;"></canvas>
-  </div>
-
   <script>
-    function startCamera() {
-      const video = document.getElementById('video');
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then((stream) => {
-          video.srcObject = stream;
-        })
-        .catch((error) => {
-          alert("カメラにアクセスできませんでした: " + error);
-        });
+    function selectFrame(shape) {
+      window.location.href = `camera.html?shape=${shape}`;
     }
-
-    function setShape(shape) {
-      document.getElementById('frameImage').src = `frames/${shape}.png`;
-      startCamera(); // Trigger camera on shape selection
-    }
-    function takePhoto() {
-  const video = document.getElementById('video');
-  const frameImage = document.getElementById('frameImage');
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
-
-  // 💡 videoの実際のサイズを取得
-  const videoWidth = video.videoWidth;
-  const videoHeight = video.videoHeight;
-
-  // 💡 canvasのサイズをvideoに合わせる
-  canvas.width = videoWidth;
-  canvas.height = videoHeight;
-
-  // Step 1: Canvasをクリア
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Step 2: 映像を描画（videoと同じ比率）
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  // Step 3: フレーム画像を同じサイズで重ねる
-  ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
-
-  // Step 4: 保存・プレビュー
-  const dataURL = canvas.toDataURL('image/png');
-  document.getElementById('snapshot').src = dataURL;
-
-  const a = document.createElement('a');
-  a.href = dataURL;
-  a.download = 'shapenshot.png';
-  a.click();
-}
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('serviceWorker.js').then(reg => {
-        console.log("Service Worker registered:", reg.scope);
-      }).catch(err => {
-        console.log("Service Worker registration failed:", err);
-      });
-    });
-  }
   </script>
 </body>
 </html>
