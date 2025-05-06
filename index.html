@@ -62,18 +62,20 @@
   </div>
 
   <script>
-    const video = document.getElementById('video');
-
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then((stream) => {
-        video.srcObject = stream;
-      })
-      .catch((error) => {
-        alert("カメラにアクセスできませんでした: " + error);
-      });
+    function startCamera() {
+      const video = document.getElementById('video');
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+          video.srcObject = stream;
+        })
+        .catch((error) => {
+          alert("カメラにアクセスできませんでした: " + error);
+        });
+    }
 
     function setShape(shape) {
       document.getElementById('frameImage').src = `frames/${shape}.png`;
+      startCamera(); // Trigger camera on shape selection
     }
     function takePhoto() {
   const video = document.getElementById('video');
