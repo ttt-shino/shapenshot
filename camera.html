@@ -47,6 +47,7 @@
     <img id="frameImage" class="overlay" alt="フレーム" />
   </div>
   <div class="controls">
+    <button onclick="startCamera()">📷 カメラを起動</button>
     <button onclick="takePhoto()">📸 撮影</button>
     <br>
     <img id="snapshot" width="300" />
@@ -93,8 +94,6 @@
       a.download = 'shapenshot.png';
       a.click();
     }
-
-    window.addEventListener('load', startCamera);
   </script>
 </body>
 </html>
