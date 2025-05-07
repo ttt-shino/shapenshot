@@ -47,7 +47,6 @@
     <img id="frameImage" class="overlay" alt="フレーム" />
   </div>
   <div class="controls">
-    <button onclick="startCamera()">📷 カメラを起動</button>
     <button onclick="takePhoto()">📸 撮影</button>
     <br>
     <img id="snapshot" width="300" />
@@ -64,16 +63,15 @@
     }
 
     function startCamera() {
-      const video = document.getElementById('video');
       navigator.mediaDevices.getUserMedia({ video: true })
-      .then((stream) => {
-      video.srcObject = stream;
-      return video.play(); // ← 明示的に再生を指示
-    })
-    .catch((error) => {
-      alert("カメラにアクセスできません: " + error);
-    });
-}
+        .then((stream) => {
+          video.srcObject = stream;
+          return video.play();
+        })
+        .catch((error) => {
+          alert("カメラにアクセスできません: " + error);
+        });
+    }
 
     function takePhoto() {
       const canvas = document.getElementById('canvas');
@@ -96,6 +94,8 @@
       a.download = 'shapenshot.png';
       a.click();
     }
+
+    window.addEventListener('load', startCamera);
   </script>
 </body>
 </html>
