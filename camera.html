@@ -102,6 +102,7 @@
 
   const dataURL = canvas.toDataURL('image/png');
   localStorage.setItem('snapshot', dataURL);  // ← 撮影結果を保存
+  localStorage.setItem('shape', shape);
   window.location.href = 'result.html';       // ← 新しい画面に遷移
 }
 
