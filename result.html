@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShapenShot - 撮影結果</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    img {
+      width: 80%;
+      max-width: 400px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      border: none;
+      background: #15c315;
+      color: white;
+    }
+    p {
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>撮影結果</h1>
+  <img id="resultImage" alt="撮影結果" />
+  <p>※画像を長押しして保存してください</p>
+  <button onclick="retry()">🔁 再撮影する</button>
+
+  <script>
+    const image = localStorage.getItem('snapshot');
+    if (image) {
+      document.getElementById('resultImage').src = image;
+    } else {
+      alert("撮影データが見つかりませんでした。カメラに戻ります。");
+      window.location.href = "camera.html";
+    }
+
+    function retry() {
+      window.location.href = "camera.html";
+    }
+  </script>
+</body>
+</html>
