@@ -43,7 +43,7 @@
 </head>
 <body>
   <div class="camera-wrapper">
-    <video id="video" autoplay playsinline></video>
+    <video id="video" autoplay playsinline muted></video>
     <img id="frameImage" class="overlay" alt="フレーム" />
   </div>
   <div class="controls">
@@ -64,14 +64,16 @@
     }
 
     function startCamera() {
+      const video = document.getElementById('video');
       navigator.mediaDevices.getUserMedia({ video: true })
-        .then((stream) => {
-          video.srcObject = stream;
-        })
-        .catch((error) => {
-          alert("カメラにアクセスできません: " + error);
-        });
-    }
+      .then((stream) => {
+      video.srcObject = stream;
+      return video.play(); // ← 明示的に再生を指示
+    })
+    .catch((error) => {
+      alert("カメラにアクセスできません: " + error);
+    });
+}
 
     function takePhoto() {
       const canvas = document.getElementById('canvas');
