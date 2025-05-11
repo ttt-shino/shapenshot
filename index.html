@@ -1,95 +1,126 @@
 <!DOCTYPE html>
+<!-- このHTMLがHTML5で書かれていることを宣言する行。必ず最初に書きます -->
+
 <html lang="ja">
+<!-- HTML文書が日本語で書かれているとブラウザに伝える -->
+
 <head>
+  <!-- ここから <head> 内は、ページの設定や読み込む情報をまとめる場所 -->
+
+  <!-- Google Fontsを使うための準備。フォントの読み込みを早くする -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- PoppinsとNoto Sans JPというフォントを読み込む -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Poppins:wght@400;700&display=swap" rel="stylesheet">  
+
+  <!-- 文字コードの設定。日本語を正しく表示するためにUTF-8を指定 -->
   <meta charset="UTF-8">
+
+  <!-- スマホでも見やすくするための画面設定 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- タブやブックマークに表示されるページのタイトル -->
   <title>ShapenShot - フレーム選択</title>
+
+  <!-- アプリアイコンの指定（スマホのホーム画面などで使われる） -->
   <link rel="icon" href="icon-512.png" type="image/png">
   <link rel="apple-touch-icon" href="icon-512.png">
+
+  <!-- PWA（ホーム画面追加アプリ）に必要な設定ファイル -->
   <link rel="manifest" href="manifest.json">
+
+  <!-- このページ専用のCSS（デザイン） -->
   <style>
     body {
       font-family: 'Poppins', 'Noto Sans JP', sans-serif;
       text-align: center;
-      background-color: #000;
-      color: white;
+      background-color: #000;  /* 背景は黒 */
+      color: white;            /* 文字色は白 */
     }
+
     h1 {
-  font-weight: 500;
-  font-size: 1.2rem;
-  margin: 8px 0 16px;
-  color: #ccc;
-  letter-spacing: 0.05em;
-}
+      font-weight: 500;        /* 少し太めの文字 */
+      font-size: 1.2rem;       /* 文字の大きさ */
+      margin: 8px 0 16px;      /* 上下の余白 */
+      color: #ccc;             /* 少し明るいグレー */
+      letter-spacing: 0.05em;  /* 文字間を少し開ける */
+    }
+
     h2 {
       font-weight: 400;
       font-size: 1.2rem;
       margin-top: 16px;
       color: #999;
     }
+
     .frame-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 16px;
+      display: grid;                            /* グリッドレイアウトでフレームを並べる */
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* カラム幅調整 */
+      gap: 16px;                                /* 各フレームの間隔 */
       padding: 20px;
       max-width: 600px;
-      margin: 0 auto;
+      margin: 0 auto;                           /* 中央揃え */
     }
+
     .frame-item {
       background-color: #000;
       border-radius: 12px;
       padding: 10px;
-      cursor: pointer;
-      transition: transform 0.2s;
+      cursor: pointer;                         /* クリックできるカーソルにする */
+      transition: transform 0.2s;              /* 拡大アニメーションの速度 */
     }
+
     .frame-item:hover {
-      transform: scale(1.05);
+      transform: scale(1.05);                  /* ホバーで少し拡大 */
     }
+
     .frame-item img {
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      object-fit: cover;
-      border-radius: 8px;
+      width: 100%;                             /* 横幅いっぱいに表示 */
+      aspect-ratio: 3 / 4;                     /* 比率を保つ（縦長） */
+      object-fit: cover;                       /* 枠内に画像をきれいに収める */
+      border-radius: 8px;                      /* 画像の角を丸める */
     }
   </style>
 </head>
-<body>
-  <h2 >ShapenShot</h2>
-  <h1>Pick a Frame to Start</h1>
-<div class="frame-grid">
-  <div class="frame-item" onclick="selectFrame('circle')">
-    <img src="frames/thumb_circle.png" alt="円フレーム">
-  </div>
-  <div class="frame-item" onclick="selectFrame('star')">
-    <img src="frames/thumb_star.png" alt="星フレーム">
-  </div>
-  <div class="frame-item" onclick="selectFrame('triangle')">
-    <img src="frames/thumb_triangle.png" alt="三角フレーム">
-  </div>
-  <div class="frame-item" onclick="selectFrame('clover')">
-    <img src="frames/thumb_clover.png" alt="クローバーフレーム">
-  </div>
-  <div class="frame-item" onclick="selectFrame('dia')">
-    <img src="frames/thumb_dia.png" alt="ダイヤフレーム">
-  </div>
-  <div class="frame-item" onclick="selectFrame('herat')">
-    <img src="frames/thumb_heart.png" alt="ハートフレーム">
-  </div>
-  <div class="frame-item" onclick="selectFrame('spade')">
-    <img src="frames/thumb_spade.png" alt="スペードフレーム">
-  </div>
-</div>
 
-<script>
-  function selectFrame(shape) {
-    window.location.href = `camera.html?shape=${shape}`;
-  }
-</script>
+<body>
+  <!-- ページの見出し部分 -->
+  <h2>ShapenShot</h2>
+  <h1>Pick a Frame to Start</h1>
+
+  <!-- フレーム一覧を並べる部分 -->
+  <div class="frame-grid">
+    <!-- それぞれのフレームを選択できるようにする -->
+    <div class="frame-item" onclick="selectFrame('circle')">
+      <img src="frames/thumb_circle.png" alt="円フレーム">
+    </div>
+    <div class="frame-item" onclick="selectFrame('star')">
+      <img src="frames/thumb_star.png" alt="星フレーム">
+    </div>
+    <div class="frame-item" onclick="selectFrame('triangle')">
+      <img src="frames/thumb_triangle.png" alt="三角フレーム">
+    </div>
+    <div class="frame-item" onclick="selectFrame('clover')">
+      <img src="frames/thumb_clover.png" alt="クローバーフレーム">
+    </div>
+    <div class="frame-item" onclick="selectFrame('dia')">
+      <img src="frames/thumb_dia.png" alt="ダイヤフレーム">
+    </div>
+    <div class="frame-item" onclick="selectFrame('herat')">
+      <img src="frames/thumb_heart.png" alt="ハートフレーム">
+    </div>
+    <div class="frame-item" onclick="selectFrame('spade')">
+      <img src="frames/thumb_spade.png" alt="スペードフレーム">
+    </div>
+  </div>
+
+  <!-- JavaScript（フレーム選択時の動き） -->
+  <script>
+    function selectFrame(shape) {
+      // 選んだshapeをURLに含めてcamera.htmlへ移動
+      window.location.href = `camera.html?shape=${shape}`;
+    }
+  </script>
 </body>
 </html>

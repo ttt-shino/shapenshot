@@ -1,10 +1,21 @@
 <!DOCTYPE html>
+<!-- このHTMLはHTML5で書かれていますよ、という宣言 -->
+
 <html lang="ja">
+<!-- このページの言語は日本語です -->
+
 <head>
   <meta charset="UTF-8">
+  <!-- 日本語などの文字を正しく表示するための設定 -->
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- スマホやタブレットでも見やすく表示する設定 -->
+
   <title>ShapenShot - 撮影</title>
+  <!-- タブやブックマークに表示されるタイトル -->
+
   <style>
+    /* 全体の文字や背景などの基本スタイル */
     body {
       margin: 0;
       background: black;
@@ -12,24 +23,33 @@
       text-align: center;
       font-family: 'Poppins', 'Noto Sans JP', sans-serif;
     }
+
+    /* カメラ映像とフレームを重ねるための囲い（アスペクト比3:4） */
     .camera-wrapper {
       position: relative;
       width: 100%;
       aspect-ratio: 3 / 4;
       overflow: hidden;
     }
+
+    /* カメラ映像とフレーム画像の共通設定 */
     video, .overlay {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
       object-fit: cover;
     }
+
     .overlay {
       pointer-events: none;
+      /* マウス操作などを無視して背後のvideoを触れるようにする */
     }
+
     .controls {
       margin-top: 20px;
+      /* ボタンなどの間隔 */
     }
+
     button {
       font-size: 1.2rem;
       padding: 10px 20px;
@@ -38,47 +58,71 @@
       border: none;
       background: #15c315;
       color: white;
+      /* ボタンの見た目 */
     }
+
     #save-instruction {
       margin-top: 10px;
       color: #ccc;
+      /* 撮影後の保存案内のスタイル */
     }
+
     #result-area {
       display: none;
+      /* 初期状態では非表示（撮影後に表示） */
     }
   </style>
 </head>
+
 <body>
+  <!-- カメラ映像と選んだフレームを表示する部分 -->
   <div class="camera-wrapper">
     <video id="video" autoplay playsinline muted></video>
+    <!-- カメラ映像 -->
+
     <img id="frameImage" class="overlay" alt="フレーム" />
+    <!-- フレーム画像（上に重ねる） -->
   </div>
+
+  <!-- 撮影ボタン -->
   <div class="controls" id="control-buttons">
     <button onclick="takePhoto()">Snap!</button>
   </div>
+
+  <!-- フレーム選択に戻るボタン -->
   <div class="controls">
     <button onclick="goHome()">Back to Frames</button>
   </div>
+
+  <!-- 撮影結果の表示エリア（最初は非表示） -->
   <div class="controls" id="result-area">
     <p id="save-instruction">※画像を長押ししてカメラロールに保存してください</p>
     <img id="snapshot" width="300" />
     <br>
     <button onclick="retryPhoto()">🔁 再撮影する</button>
     <canvas id="canvas" style="display: none;"></canvas>
+    <!-- 撮影用のキャンバス（非表示） -->
   </div>
+
+  <!-- JavaScript：カメラ起動・撮影・保存などの処理 -->
   <script>
+    // HTML内の要素をJavaScriptで使えるように取得しておく
     const video = document.getElementById('video');
     const frameImage = document.getElementById('frameImage');
     const snapshot = document.getElementById('snapshot');
     const controlButtons = document.getElementById('control-buttons');
     const resultArea = document.getElementById('result-area');
+
+    // URLからshape（選んだフレーム）を取得
     const urlParams = new URLSearchParams(window.location.search);
     const shape = urlParams.get('shape');
 
+    // shapeが指定されていたら、それに対応するフレーム画像を読み込む
     if (shape) {
       frameImage.src = `frames/frame_${shape}.png`;
     }
 
+    // カメラを起動する関数
     function startCamera() {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then((stream) => {
@@ -90,34 +134,43 @@
         });
     }
 
+    // 撮影する関数
     function takePhoto() {
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
-  const videoWidth = video.videoWidth;
-  const videoHeight = video.videoHeight;
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
 
-  canvas.width = videoWidth;
-  canvas.height = videoHeight;
+      // カメラの映像サイズを取得
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+      canvas.width = videoWidth;
+      canvas.height = videoHeight;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-  ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
+      // キャンバスをいったんクリアして、映像とフレームを描画
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
 
-  const dataURL = canvas.toDataURL('image/png');
-  localStorage.setItem('snapshot', dataURL);  // ← 撮影結果を保存
-  localStorage.setItem('shape', shape);
-  window.location.href = 'result.html';       // ← 新しい画面に遷移
-}
+      // 撮影画像をBase64形式で保存
+      const dataURL = canvas.toDataURL('image/png');
+      localStorage.setItem('snapshot', dataURL);
+      localStorage.setItem('shape', shape);
 
+      // 撮影結果表示画面に移動
+      window.location.href = 'result.html';
+    }
+
+    // 再撮影ボタンを押したときの処理
     function retryPhoto() {
       resultArea.style.display = 'none';
       controlButtons.style.display = 'block';
     }
 
+    // フレーム選択画面に戻る
     function goHome() {
       window.location.href = 'index.html';
     }
 
+    // ページを読み込んだら自動的にカメラを起動
     window.addEventListener('load', startCamera);
   </script>
 </body>

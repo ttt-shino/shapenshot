@@ -1,83 +1,118 @@
 <!DOCTYPE html>
+<!-- HTML5文書であることを宣言します -->
+
 <html lang="ja">
-    <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Poppins:wght@400;700&display=swap" rel="stylesheet">  
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ShapenShot - 撮影結果</title>
-        <style>
+<!-- このHTMLは日本語で書かれていることを示します -->
+
+<head>
+  <!-- Google Fonts を事前接続（読み込みを高速化する設定） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- 使用するフォント（PoppinsとNoto Sans JP）を読み込み -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Poppins:wght@400;700&display=swap" rel="stylesheet">  
+
+  <!-- ページが日本語を正しく表示できるように設定 -->
+  <meta charset="UTF-8">
+
+  <!-- スマホで見やすいように幅やズーム設定をします -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ページのタイトル（ブラウザのタブに表示される） -->
+  <title>ShapenShot - 撮影結果</title>
+
+  <!-- このページのデザインを指定するCSS -->
+  <style>
     body {
-      background-color: black;
-      color: white;
-      text-align: center;
+      background-color: black;  /* 背景は黒 */
+      color: white;             /* 文字は白 */
+      text-align: center;       /* テキスト中央揃え */
       font-family: 'Poppins', 'Noto Sans JP', sans-serif;
       padding: 20px;
     }
+
     h1 {
-  font-weight: 500;
-  font-size: 1.2rem;
-  margin: 8px 0 16px;
-  color: #ccc;
-  letter-spacing: 0.05em;
-}
+      font-weight: 500;         /* 少し太めの文字 */
+      font-size: 1.2rem;        /* 少し大きめの文字サイズ */
+      margin: 8px 0 16px;       /* 上下の余白 */
+      color: #ccc;              /* 明るめのグレー文字 */
+      letter-spacing: 0.05em;   /* 文字間隔を少し空ける */
+    }
+
     h2 {
       font-weight: 400;
       font-size: 1.2rem;
       margin-top: 16px;
       color: #999;
     }
+
     img {
-      width: 80%;
-      max-width: 400px;
-      border-radius: 12px;
+      width: 80%;               /* 横幅80% */
+      max-width: 400px;         /* 最大400pxに制限 */
+      border-radius: 12px;      /* 角を少し丸く */
       margin-bottom: 10px;
     }
+
     button {
       font-size: 1.2rem;
-      padding: 10px 20px;
+      padding: 10px 20px;       /* ボタンの余白 */
       margin-top: 20px;
-      border-radius: 8px;
+      border-radius: 8px;       /* 角を丸く */
       border: none;
-      background: #15c315;
+      background: #15c315;      /* 緑っぽい背景色 */
       color: white;
     }
-
   </style>
 </head>
+
 <body>
+  <!-- 見出し：撮影された画像の表示 -->
   <h1>Your Shot</h1>
+
+  <!-- 撮影された画像を表示するためのimgタグ -->
   <img id="resultImage" alt="撮影結果" />
+
+  <!-- 保存方法を説明する見出し -->
   <h1>Long-press to Save</h1>
+
+  <!-- 再撮影するボタン（押すとカメラに戻る） -->
   <button onclick="retry()">Retake!</button>
+
   <br>
+
+  <!-- フレーム選択画面に戻るボタン -->
   <button onclick="goHome()">Back to Frames</button>
 
+  <!-- JavaScriptで、画像の表示やボタンの動作を設定する -->
   <script>
+    // ローカルストレージから「snapshot」という画像データを取り出す
     const image = localStorage.getItem('snapshot');
+
+    // データがある場合 → 画像を画面に表示
     if (image) {
       document.getElementById('resultImage').src = image;
     } else {
+      // もし画像が見つからなければエラーメッセージを出してカメラ画面へ戻す
       alert("撮影データが見つかりませんでした。カメラに戻ります。");
       window.location.href = "camera.html";
     }
 
+    // 「Retake!」ボタンが押されたときの処理
     function retry() {
-      const shape = localStorage.getItem('shape');
+      const shape = localStorage.getItem('shape'); // どのフレームかも一緒に読み込む
       if (shape) {
+        // 選んだフレームをURLに含めてカメラ画面へ移動
         window.location.href = `camera.html?shape=${shape}`;
       } else {
-        window.location.href = "camera.html";
+        window.location.href = "camera.html"; // フレーム指定なしで移動
       }
     }
 
+    // 「Back to Frames」ボタンでフレーム選択画面に戻る
     function goHome() {
-    window.location.href = "index.html";
-  }
+      window.location.href = "index.html";
+    }
   </script>
 </body>
 </html>
